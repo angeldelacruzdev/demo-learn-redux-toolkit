@@ -1,55 +1,77 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { incremented, amountAdded } from "./features/counter/counterSlice";
+import { useFetchBreedsQuery } from "./features/breeds/breeds-api-slice";
+
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
+  const count = useAppSelector((state) => state.counterReducer.value);
+
+  const dispatch = useAppDispatch();
+  const [numProducts, SetNumProducts] = useState<string>("10");
+  const { data = [], isFetching } = useFetchBreedsQuery(parseInt(numProducts));
+
+  function handleClick() {
+    dispatch(amountAdded(5));
+  }
+
+  function numberFormat(number: number) {
+    return new Intl.NumberFormat("en-IN", {
+      maximumSignificantDigits: 3,
+    }).format(number);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
+
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
+
         <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
+          <button onClick={handleClick}>Count is: {count}</button>
         </span>
+        <p>Number of products {data?.length}</p>
+        <div className="select-container">
+          <p className="select-container__title">Products to fetch: </p>
+          <select
+            defaultValue={numProducts}
+            onChange={(e) => SetNumProducts(e.target.value.toString())}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+        <table className="table table-style" width={"60%"}>
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Image</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.map((product) => (
+              <tr key={product.id}>
+                <td>{product.id}</td>
+                <td>{product.title}</td>
+                <td>USD${numberFormat(product.price)}</td>
+
+                <td>
+                  <img src={product.image} alt={product.title} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </header>
     </div>
   );

@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  width: 90%;
+  margin: auto;
 }
 
 .App-logo {
@@ -36,4 +38,32 @@
   100% {
     transform: translateY(0px);
   }
+}
+.table {
+  width: 100%;
+  padding: 5px;
+}
+
+.table th {
+  font-size: 1rem;
+}
+
+.table tbody tr td {
+  font-size: 1rem;
+}
+
+.table tbody tr td img {
+  height: 200px;
+}
+.table-style {
+  border-radius: 5px;
+  border: 1px solid rgb(167, 167, 167);
+}
+
+.select-container {
+  margin-bottom: 10px;
+}
+
+.select-container .select-container__title {
+  margin: 0px;
 }
